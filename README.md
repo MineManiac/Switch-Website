@@ -8,6 +8,8 @@
 
 Link para API utilizada: https://rapidapi.com/alexaustin9816-BYtbNAGYg_K/api/gaming-news/
 
+Link do Heroku: COLOCAR QUANDO TIVER #TODO
+
 ## Cronograma:
 
   - 24/05 (Terça-Feira): 
@@ -53,6 +55,10 @@ Para rodar a aplicação do react, navegue pelo prompt até o diretório do proj
 
     npm start
 
+Para manter o Heroku sempre atualizado, usar o comando:
+
+    git push heroku main
+
 # Para o Desenvolvimento do Projeto no Backend:
 
 Para começar a trabalhar no projeto, é necessário ligar o ambiente virtual (env). Navegando pelo prompt até o diretório do projeto git, utilizar o comando:
@@ -62,6 +68,14 @@ Para começar a trabalhar no projeto, é necessário ligar o ambiente virtual (e
 Para rodar o backend, utilize o comando:
 
     python manage.py runserver
+
+Sempre que fizer alterações nas dependências do projeto (ou seja, bibliotecas), é importante utilizar o seguinte comando para que a aplicação no Heroku continue funcionando corretamente:
+
+    pip freeze > requirements.txt
+    
+Para manter o Heroku sempre atualizado, usar o comando:
+
+    git push heroku main
 
 
 
