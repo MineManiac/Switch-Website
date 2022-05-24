@@ -53,7 +53,7 @@ Para rodar a aplicação do react, navegue pelo prompt até o diretório do proj
 
     npm start
 
-# Para o Desenvolvimento do Projeto
+# Para o Desenvolvimento do Projeto no Backend:
 
 Para começar a trabalhar no projeto, é necessário ligar o ambiente virtual (env). Navegando pelo prompt até o diretório do projeto git, utilizar o comando:
 
