@@ -1,8 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
 
-class User(models.Model):
-    Username = models.CharField(max_length=200)
-    Password = models.TextField()
+
+class User(AbstractUser):
+    # title = models.CharField(max_length=200)
+    # content = models.TextField()
+    friends = models.ManyToManyField("User", blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     
