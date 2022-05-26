@@ -8,6 +8,8 @@
 
 Link para API utilizada: https://rapidapi.com/alexaustin9816-BYtbNAGYg_K/api/gaming-news/
 
+Link para o Frontend: https://github.com/renatex333/projeto-3-switch-frontend
+
 Link do Heroku: COLOCAR QUANDO TIVER #TODO
 
 ## Cronograma:
@@ -49,15 +51,6 @@ Link do Heroku: COLOCAR QUANDO TIVER #TODO
 
 ![Img_arquitetura_git](https://user-images.githubusercontent.com/62605906/170023479-5cbeabeb-e760-41fe-a15b-039c5589790b.jpeg)
 
-# Para o Desenvolvimento do Projeto no Frontend:
-
-Para rodar a aplicação do react, navegue pelo prompt até o diretório do projeto git e utilize o comando:
-
-    npm start
-
-Para manter o Heroku sempre atualizado, usar o comando:
-
-    git push heroku main
 
 # Para o Desenvolvimento do Projeto no Backend:
 
