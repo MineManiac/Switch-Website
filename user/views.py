@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import Http404
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User as User
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import Permission
 from django.contrib.auth.decorators import login_required
