@@ -1,12 +1,14 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from django.http import Http404
 from django.contrib.auth.models import User as User
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import Permission
 from django.contrib.auth.decorators import login_required
+from rest_framework.permissions import IsAuthenticated
+from django.http import Http404, HttpResponseForbidden, JsonResponse
+from rest_framework.authtoken.models import Token
 
 import user
 from .models import Friend_Request, User
@@ -31,9 +33,10 @@ def index(request):
 
 
 @api_view(['GET', 'POST'])
-def api_user(request, user_id):
+@permission_classes([IsAuthenticated])
+def api_user(request):
     try:
-        user = User.objects.get(id = user_id)
+        user = User.objects.all()
     except User.DoesNotExist:
         raise Http404()
 
@@ -43,8 +46,25 @@ def api_user(request, user_id):
         user.friend = new_user_data['friend']
         user.save()
     
-    serialized_user = UserSerializer(user)
+    users = User.objects.filter(user = request.user)
+    serialized_user = UserSerializer(users, many = True)
     return Response(serialized_user.data)
+
+@api_view(['POST'])
+def api_get_token(request):
+    try:
+        if request.method == 'POST':
+            username = request.data['username']
+            password = request.data['password']
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
+                token, created = Token.objects.get_or_create(user=user)
+                return JsonResponse({"token":token.key})
+            else:
+                return HttpResponseForbidden()
+    except:
+        return HttpResponseForbidden()
 
 @api_view(['GET'])
 def api_news(request):
