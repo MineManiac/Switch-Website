@@ -23,7 +23,7 @@ def novidade_games(request):
 
     response = requests.request("GET", url, headers=headers)
 
-    return response.text #Se quiser testar, coloque return HttpResponse(response.text)
+    return HttpResponse(response.text) #Se quiser testar, coloque return HttpResponse(response.text)
 
 
 def index(request):
