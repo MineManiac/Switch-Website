@@ -23,11 +23,7 @@ def novidade_games(request):
 
     response = requests.request("GET", url, headers=headers)
 
-    return HttpResponse(response.text) #Se quiser testar, coloque return HttpResponse(response.text)
-
-
-def index(request):
-    return HttpResponse("Olá mundo! Este é o app notes de Tecnologias Web do Insper.")
+    return HttpResponse(response.text,  headers={"Access-Control-Allow-Origin": "*"}) #Se quiser testar, coloque return HttpResponse(response.text)
 
 
 @api_view(['GET', 'POST'])
@@ -49,9 +45,9 @@ def api_user(request, user_id):
 @api_view(['GET'])
 def api_news(request):
 
-    data = novidade_games()
+    data = novidade_games(request)
 
-    print(data)
+    return data
 
 @login_required
 def send_friend_request(request, user_id):
