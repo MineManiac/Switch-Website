@@ -69,9 +69,9 @@ def api_get_token(request):
 @api_view(['GET'])
 def api_news(request):
 
-    data = novidade_games()
+    data = novidade_games(request)
 
-    print(data)
+    return data
 
 @login_required
 def send_friend_request(request, user_id):
