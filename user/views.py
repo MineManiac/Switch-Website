@@ -15,21 +15,8 @@ from .models import Friend_Request, User
 from .serializers import UserSerializer
 import requests
 
-def novidade_games(request):
-    url = "https://gaming-news.p.rapidapi.com/news"
-
-    headers = {
-	    "X-RapidAPI-Host": "gaming-news.p.rapidapi.com",
-	    "X-RapidAPI-Key": "431b871e74msha3177211b2d7899p1645e3jsnde8a9570000a"
-    }
-
-    response = requests.request("GET", url, headers=headers)
-
-    return HttpResponse(response.text) #Se quiser testar, coloque return HttpResponse(response.text)
-
-
 def index(request):
-    return HttpResponse("Olá mundo! Este é o app notes de Tecnologias Web do Insper.")
+    return HttpResponse("Olá mundo! Este é o caminho do vazio. Aqui é bem vazio, vá para http://localhost:8000/api/news lá é muito mais cheio")
 
 
 @api_view(['GET', 'POST'])
@@ -69,7 +56,16 @@ def api_get_token(request):
 @api_view(['GET'])
 def api_news(request):
 
-    data = novidade_games(request)
+    url = "https://gaming-news.p.rapidapi.com/news"
+
+    headers = {
+	    "X-RapidAPI-Host": "gaming-news.p.rapidapi.com",
+	    "X-RapidAPI-Key": "431b871e74msha3177211b2d7899p1645e3jsnde8a9570000a"
+    }
+
+    response = requests.request("GET", url, headers=headers)
+
+    data =  HttpResponse(response.text)
 
     return data
 
