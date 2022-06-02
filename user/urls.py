@@ -6,7 +6,7 @@ urlpatterns = [
     path('', views.index, name='news'),
     path('api/news', views.api_news),
     path('api/signup', views.api_signup),
-    path('api/user', views.api_user_friends),
+    path('api/user', views.api_user),
     path('api/login', views.api_get_token),
     path('send_friend_request/<int:user_id>/',
         views.send_friend_request, name='send friend request'),
