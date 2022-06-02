@@ -73,7 +73,8 @@ def api_news(request):
 
     return data
 
-@login_required
+# @login_required
+@permission_classes([IsAuthenticated])
 def send_friend_request(request, user_id):
     from_user = request.user
     to_user = User.objects.get(id = user_id)
@@ -84,7 +85,8 @@ def send_friend_request(request, user_id):
     else:
         return HttpResponse('friend request was alredy sent')
 
-@login_required
+# @login_required
+@permission_classes([IsAuthenticated])
 def accept_friend_request(request, request_id):
     friend_request = Friend_Request.objects.get(id=request_id)
     if friend_request.to_user == request.user:
