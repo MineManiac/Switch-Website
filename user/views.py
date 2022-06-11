@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from django.contrib.auth.models import User as User
+# from django.contrib.auth.models import User as User
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import Permission
 from django.contrib.auth.decorators import login_required
@@ -12,7 +12,7 @@ from rest_framework.authtoken.models import Token
 
 import user
 from .models import Friend_Request, User
-from .serializers import UserSerializer
+from .serializers import UserSerializer, FriendRequestsSerializer, UsernameSerializer, UserFriendsSerializer
 import requests
 
 def index(request):
@@ -30,9 +30,7 @@ def api_news(request):
 
     response = requests.request("GET", url, headers=headers)
 
-    data =  HttpResponse(response.text)
-
-    return data
+    return HttpResponse(response.text)
 
 @api_view(['POST'])
 def api_signup(request):
@@ -52,54 +50,94 @@ def api_signup(request):
 
 @api_view(['POST'])
 def api_get_token(request):
+    if request.method == 'POST':
+        username = request.data['username']
+        password = request.data['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            token, created = Token.objects.get_or_create(user=user)
+            return JsonResponse({"token":token.key})
+        else:
+            return HttpResponseForbidden()
+
+@permission_classes([IsAuthenticated])
+@api_view(['GET', 'POST'])
+def send_friend_request(request):
     try:
         if request.method == 'POST':
-            username = request.data['username']
-            password = request.data['password']
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                token, created = Token.objects.get_or_create(user=user)
-                return JsonResponse({"token":token.key})
+            from_user = request.user
+            # from_user = User.objects.get(id = 2)
+            try:
+                to_user = User.objects.all().filter(username=request.data["friendName"])
+            except:
+                return Response({"response":"User not found!"})
+            # to_user = User.objects.get(id=user_id)
+            friend_request, created = Friend_Request.objects.get_or_create(
+                from_user = from_user, to_user = to_user)
+            if created:
+                return Response({"response":"Friend Request Sent!"})
             else:
-                return HttpResponseForbidden()
+                return Response({"response":"Friend Request Already Sent!"})
+
     except:
         return HttpResponseForbidden()
 
-@permission_classes([IsAuthenticated])
-def send_friend_request(request, user_id):
-    from_user = request.user
-    to_user = User.objects.get(id = user_id)
-    friend_request, created = Friend_Request.objects.get_or_create(
-        from_user=from_user, to_user = to_user)
-    if created:
-        return HttpResponse('friend request sent')
-    else:
-        return HttpResponse('friend request was alredy sent')
-
-# @login_required
+@login_required
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def accept_friend_request(request, request_id):
     friend_request = Friend_Request.objects.get(id=request_id)
     if friend_request.to_user == request.user:
         friend_request.to_user.friends.add(friend_request.from_user)
         friend_request.delete()
-        return HttpResponse('friend request accepted')
-    else:
-        return HttpResponse('friend request not accepted')
+        print("Aceitou a request")
+    
+    return Response()
 
-@api_view(['GET', 'POST'])
+@login_required
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def deny_friend_request(request, request_id):
+    friend_request = Friend_Request.objects.get(id=request_id)
+    friend_request.delete()
+    print("Deletou a request")
+
+    return Response()
+
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def api_user(request):
-    try:
-        user = User.objects.all()
-    except User.DoesNotExist:
-        raise Http404()
-    if request.method == 'POST':
-        new_user_data = request.data
-        # user.title = new_note_data['title']
-        user.friend = new_user_data['friend']
-        user.save()
-    
-    users = User.objects.filter(user = request.user)
-    serialized_user = UserSerializer(users, many = True)
-    return Response(serialized_user.data)
+    this_user = request.user
+    # this_user = User.objects.get(id = 3)
+    all_users = User.objects.all()
+    # Obtém as FriendRequests feitas ao usuário
+    # friend_requests = Friend_Request.objects.all().filter(to_user=this_user)
+    friend_requests = Friend_Request.objects.all().filter(to_user=this_user)
+    # Serializa essas request
+    serialized_frs = FriendRequestsSerializer(friend_requests, many = True)
+    friend_requests_data = serialized_frs.data
+
+    # A resposta devolvida ao FrontEnd da aplicação será um dicionário contendo: 
+    # - uma lista de dicionários de usuários que fizeram Friend Request 
+    # para este usuário e o devido ID da Request realizada;
+    # - uma lista de amigos deste usuário.
+
+    lista_frs = []
+    # Para cada FR, pega o nome do usuário que fez a FR através de seu ID
+    for fr in friend_requests_data:
+        fr_user = all_users.filter(id=fr["from_user"])
+        # Serializa Usuário para que seja retornado apenas uma string com seu Username
+        serialized_username = UsernameSerializer(fr_user[0])
+        # serialized_username.data["username"] é uma string com o Username do Usuário que realizou a FriendRequest
+        # fr["id"] é o ID da FriendRequest
+        response_fr = {"friend_request_id": fr["id"], "friend_request_user": serialized_username.data["username"]}
+        lista_frs.append(response_fr)
+
+    # Serializa o Usuário para retornar um dicionário com uma lista de amigos deste usuário
+    # Retorna como response a lista de amigos
+    this_user_friends_serialized = UserFriendsSerializer(this_user)
+    this_user_friends_list = this_user_friends_serialized.data["friends"]
+
+    response_data = {"friend_requests": lista_frs, "friends": this_user_friends_list}
+
+    return Response(response_data)
