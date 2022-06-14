@@ -12,7 +12,7 @@ Gaming News API: https://rapidapi.com/alexaustin9816-BYtbNAGYg_K/api/gaming-news
 
 Frontend: https://github.com/renatex333/projeto-3-switch-frontend
 
-Heroku:  https://salty-fortress-53225.herokuapp.com
+Heroku: COLOCAR QUANDO TIVER #TODO
 
 ## Switch - Preview
 
@@ -87,4 +87,15 @@ In case there are new dependencies use:
 Keep heroku updated use:
 
     git push heroku main
+    
+# Deploy with Heroku
+    
+      The front-end was successfully deployed in Heroku with the URL: 
+      https://peaceful-plateau-29378.herokuapp.com/
+
+      Back-end was deployed in Heroku with the URL:
+      https://salty-fortress-53225.herokuapp.com
+   We encountered a issue where all requests done to the back-end return 503, even tho on heroku's website it shows the build as successful, 
+   at this point it is too late to continue working on the issue. 
+
 
