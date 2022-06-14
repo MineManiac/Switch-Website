@@ -63,42 +63,38 @@ def api_get_token(request):
 @permission_classes([IsAuthenticated])
 @api_view(['GET', 'POST'])
 def send_friend_request(request):
-    try:
-        if request.method == 'POST':
-            from_user = request.user
-            # from_user = User.objects.get(id = 2)
-            try:
-                to_user = User.objects.all().filter(username=request.data["friendName"])
-            except:
-                return Response({"response":"User not found!"})
-            # to_user = User.objects.get(id=user_id)
-            friend_request, created = Friend_Request.objects.get_or_create(
-                from_user = from_user, to_user = to_user)
-            if created:
-                return Response({"response":"Friend Request Sent!"})
-            else:
-                return Response({"response":"Friend Request Already Sent!"})
+    if request.method == 'POST':
+        from_user = request.user
+        # from_user = User.objects.get(id = 2)
+        try:
+            to_user = User.objects.all().filter(username=request.data["friendName"])[0]
+        except:
+            print("User not found")
+            return Response({"response":"User not found!"})
+        # to_user = User.objects.get(id=user_id)
+        friend_request, created = Friend_Request.objects.get_or_create(
+            from_user = from_user, to_user = to_user)
+        if created:
+            return Response({"response":"Friend Request Sent!"})
+        else:
+            return Response({"response":"Friend Request Already Sent!"})
 
-    except:
-        return HttpResponseForbidden()
-
-@login_required
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def accept_friend_request(request, request_id):
-    friend_request = Friend_Request.objects.get(id=request_id)
+    friend_request = Friend_Request.objects.all().filter(id=request_id)[0]
     if friend_request.to_user == request.user:
+        print(friend_request.from_user)
         friend_request.to_user.friends.add(friend_request.from_user)
         friend_request.delete()
         print("Aceitou a request")
     
     return Response()
 
-@login_required
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def deny_friend_request(request, request_id):
-    friend_request = Friend_Request.objects.get(id=request_id)
+    friend_request = Friend_Request.objects.all().filter(id=request_id)[0]
     friend_request.delete()
     print("Deletou a request")
 
@@ -136,7 +132,12 @@ def api_user(request):
     # Serializa o Usuário para retornar um dicionário com uma lista de amigos deste usuário
     # Retorna como response a lista de amigos
     this_user_friends_serialized = UserFriendsSerializer(this_user)
-    this_user_friends_list = this_user_friends_serialized.data["friends"]
+    this_user_friends_id_list = this_user_friends_serialized.data["friends"]
+    this_user_friends_list = []
+    for friend_id in this_user_friends_id_list:
+        friend_user = all_users.filter(id=friend_id)
+        friend_serialized_username = UsernameSerializer(friend_user[0]).data
+        this_user_friends_list.append(friend_serialized_username["username"])
 
     response_data = {"friend_requests": lista_frs, "friends": this_user_friends_list}
 
