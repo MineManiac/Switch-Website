@@ -28,7 +28,7 @@ DEBUG = False
 
 #ALLOWED_HOSTS = []
 
-ALLOWED_HOSTS = ['salty-fortress-53225.herokuapp.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['aqueous-sea-40270.herokuapp.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
