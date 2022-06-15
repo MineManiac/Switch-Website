@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: gunicorn salty-fortress-53225.wsgi
+web: gunicorn nintendo.wsgi
