@@ -28,7 +28,7 @@ DEBUG = False
 
 #ALLOWED_HOSTS = []
 
-ALLOWED_HOSTS = ['aqueous-sea-40270.herokuapp.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['peaceful-brook-18641.herokuapp.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
