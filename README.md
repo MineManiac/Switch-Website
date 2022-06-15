@@ -12,7 +12,7 @@ Gaming News API: https://rapidapi.com/alexaustin9816-BYtbNAGYg_K/api/gaming-news
 
 Frontend: https://github.com/renatex333/projeto-3-switch-frontend
 
-Heroku: COLOCAR QUANDO TIVER #TODO
+Heroku:  https://shielded-caverns-69041.herokuapp.com/
 
 ## Switch - Preview
 
