@@ -1,4 +1,4 @@
-# Projeto 3 - Switch
+# Switch Website
 
 ## Members: 
    Renato Falcão, Diogo Duarte, Jorás Custodio, Matheus Ribeiro
